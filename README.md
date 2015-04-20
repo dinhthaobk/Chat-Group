@@ -1,5 +1,5 @@
 # Chat-Group
-<br>Phần mềm chat nhóm -  Bài tập lớn Java 
+  Phần mềm chat nhóm -  Bài tập lớn Java 
 <br> Danh sách sinh viên thực hiện:
   <br> MSSV	     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        Họ Và Tên 
 <br>20122589  	&nbsp;&nbsp;&nbsp;    Nguyễn Linh Trang.
