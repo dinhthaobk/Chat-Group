@@ -19,12 +19,11 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class ServerGUI extends JFrame implements ActionListener {
+public class ServerGUI extends JFrame {
 
 	private JTextField txtPort;
 	private JButton btnStart, btnStop, btnExit;
 	private JTextArea txtChat, txtEvent;
-
 	private Server server;
 	private int port;
 
@@ -50,12 +49,67 @@ public class ServerGUI extends JFrame implements ActionListener {
 		JPanel pnNort = new JPanel();
 		pnNort.add(new JLabel("Port : "));
 		txtPort = new JTextField("" + port, 10);
+		txtPort.setEditable(true);
 		pnNort.add(txtPort);
 		btnStart = new JButton("Start");
 		pnNort.add(btnStart);
 		btnStop = new JButton("Stop");
+		btnStop.setEnabled(false);
 		pnNort.add(btnStop);
 		btnExit = new JButton("Exit");
+		pnNort.add(btnExit);
+
+		// Include Area Text Chat and Event
+		JPanel pnCenter = new JPanel();
+		pnCenter.setLayout(new GridLayout(1, 2));
+		txtChat = new JTextArea(20, 30);
+		txtChat.setEditable(false);
+		appendRoom("Chat room.");
+		pnCenter.add(new JScrollPane(txtChat));
+		txtEvent = new JTextArea(20, 10);
+		txtEvent.setEditable(false);
+		appendEvent("Log event.");
+		pnCenter.add(new JScrollPane(txtEvent));
+
+		btnStart.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				if (server != null) {
+					server.stop();
+					server = null;
+					txtPort.setEditable(true);
+					btnStart.setEnabled(true);
+					btnStop.setEnabled(false);
+				}
+				try {
+					port = Integer.parseInt(txtPort.getText().trim());
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(null,
+							"Nhập cổng Port không hợp lê ");
+				}
+
+				
+				btnStop.setEnabled(true);
+				btnStart.setEnabled(false);
+				txtPort.setEditable(false);
+			}
+		});
+
+		btnStop.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// server.stop();
+				btnStart.setEnabled(true);
+				btnStop.setEnabled(false);
+				txtPort.setEditable(true);
+				server = null;
+
+			}
+		});
+
 		btnExit.addActionListener(new ActionListener() {
 
 			@Override
@@ -67,19 +121,6 @@ public class ServerGUI extends JFrame implements ActionListener {
 					System.exit(0);
 			}
 		});
-		pnNort.add(btnExit);
-
-		// Include Area Text Chat and Event
-		JPanel pnCenter = new JPanel();
-		pnCenter.setLayout(new GridLayout(1, 2));
-		txtChat = new JTextArea(20, 30);
-		txtChat.setEditable(false);
-		appendRoom("Chat room :");
-		pnCenter.add(new JScrollPane(txtChat));
-		txtEvent = new JTextArea(20, 10);
-		txtEvent.setEditable(false);
-		appendEvent("Log event :");
-		pnCenter.add(new JScrollPane(txtEvent));
 
 		pnBorder.add(pnNort, BorderLayout.NORTH);
 		pnBorder.add(pnCenter, BorderLayout.CENTER);
@@ -88,11 +129,11 @@ public class ServerGUI extends JFrame implements ActionListener {
 
 	}
 
-	private void appendEvent(String str) {
+	public void appendEvent(String str) {
 		txtEvent.append(str + "\n");
 	}
 
-	private void appendRoom(String str) {
+	public void appendRoom(String str) {
 		txtChat.append(str + "\n");
 
 	}
@@ -100,12 +141,6 @@ public class ServerGUI extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		ServerGUI servGUI = new ServerGUI("Server", 8080);
 		servGUI.doShow();
+		
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
