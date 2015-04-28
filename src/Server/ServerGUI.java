@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -19,8 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class ServerGUI extends JFrame {
-
+public class ServerGUI extends JFrame implements ActionListener {
+	private static final long serialVersionUID = 1L;
 	private JTextField txtPort;
 	private JButton btnStart, btnStop, btnExit;
 	private JTextArea txtChat, txtEvent;
@@ -34,99 +35,47 @@ public class ServerGUI extends JFrame {
 	}
 
 	public void doShow() {
-		setSize(800, 400);
+		setSize(400, 400);
 		setLocationRelativeTo(null);
 		addControl();
-		setResizable(false);
+		setResizable(true);
 		setVisible(true);
 	}
 
 	private void addControl() {
-
+		// UI
 		JPanel pnBorder = new JPanel();
 		pnBorder.setLayout(new BorderLayout());
-
 		JPanel pnNort = new JPanel();
 		pnNort.add(new JLabel("Port : "));
 		txtPort = new JTextField("" + port, 10);
 		txtPort.setEditable(true);
 		pnNort.add(txtPort);
 		btnStart = new JButton("Start");
+		btnStart.addActionListener(this);
 		pnNort.add(btnStart);
 		btnStop = new JButton("Stop");
 		btnStop.setEnabled(false);
+		btnStop.addActionListener(this);
 		pnNort.add(btnStop);
 		btnExit = new JButton("Exit");
+		btnExit.addActionListener(this);
 		pnNort.add(btnExit);
-
 		// Include Area Text Chat and Event
 		JPanel pnCenter = new JPanel();
 		pnCenter.setLayout(new GridLayout(1, 2));
-		txtChat = new JTextArea(20, 30);
+		txtChat = new JTextArea(9, 9);
 		txtChat.setEditable(false);
 		appendRoom("Chat room.");
 		pnCenter.add(new JScrollPane(txtChat));
-		txtEvent = new JTextArea(20, 10);
+		txtEvent = new JTextArea(9, 9);
 		txtEvent.setEditable(false);
 		appendEvent("Log event.");
 		pnCenter.add(new JScrollPane(txtEvent));
-
-		btnStart.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				if (server != null) {
-					server.stop();
-					server = null;
-					txtPort.setEditable(true);
-					btnStart.setEnabled(true);
-					btnStop.setEnabled(false);
-				}
-				try {
-					port = Integer.parseInt(txtPort.getText().trim());
-				} catch (NumberFormatException ex) {
-					JOptionPane.showMessageDialog(null,
-							"Nhập cổng Port không hợp lê ");
-				}
-
-				
-				btnStop.setEnabled(true);
-				btnStart.setEnabled(false);
-				txtPort.setEditable(false);
-			}
-		});
-
-		btnStop.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// server.stop();
-				btnStart.setEnabled(true);
-				btnStop.setEnabled(false);
-				txtPort.setEditable(true);
-				server = null;
-
-			}
-		});
-
-		btnExit.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int ref = JOptionPane.showConfirmDialog(null,
-						"Thoát chương trình", "Thoát",
-						JOptionPane.YES_NO_OPTION);
-				if (ref == JOptionPane.YES_OPTION)
-					System.exit(0);
-			}
-		});
-
 		pnBorder.add(pnNort, BorderLayout.NORTH);
 		pnBorder.add(pnCenter, BorderLayout.CENTER);
 		getContentPane();
 		add(pnBorder);
-
 	}
 
 	public void appendEvent(String str) {
@@ -141,6 +90,51 @@ public class ServerGUI extends JFrame {
 	public static void main(String[] args) {
 		ServerGUI servGUI = new ServerGUI("Server", 8080);
 		servGUI.doShow();
-		
+	}
+
+	// Action
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnExit) {
+			int ref = JOptionPane.showConfirmDialog(null, "Exit", "Exit",
+					JOptionPane.YES_NO_OPTION);
+			if (ref == JOptionPane.YES_OPTION) {
+				if (server != null)
+					try {
+						server.stop();
+						server = null;
+					} catch (Exception ex) {
+						appendEvent("Can't exit ! Server can't stop ");
+					}
+
+				else
+					System.exit(0);
+			}
+		}
+		if (e.getSource() == btnStart) {
+			if (server != null) {
+				server.stop();
+				server = null;
+				btnStart.setEnabled(true);
+				btnStop.setEnabled(false);
+				txtPort.setEditable(true);
+			} else
+				server = new Server(port, this);
+			// appendEvent("Start sever !");
+			new ServerRuning().start();
+
+		}
+	}
+
+	class ServerRuning extends Thread {
+		public void run() {
+			try {
+				server.start();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 	}
 }

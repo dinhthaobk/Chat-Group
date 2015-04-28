@@ -1,21 +1,44 @@
 package Server;
 
-import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
 
-public class Server {
+class Server {
 
-	public Server(int port,ServerGUI servGUI) {
-		// TODO Auto-generated constructor stub
-	}
+	private int port;
+	private ServerGUI serverGui;
+	private ServerSocket servSocket;
+	private Socket socketClientConnect;
+	private ArrayList<Socket> listClientConnect;
 
-	public void start() {
-		// TODO Auto-generated method stub
-		
+	private boolean isConnect = true;
+
+	public Server(int Port, ServerGUI serverGUI) {
+		this.port = port;
+		this.serverGui = serverGUI;
 	}
 
 	public void stop() {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	public void start() throws IOException {
+		serverGui.appendEvent("OK");
+		servSocket = new ServerSocket(port);
+		while (isConnect) {
+			socketClientConnect = servSocket.accept();
+			serverGui.appendEvent("Accept listen :"
+					+ socketClientConnect.getInetAddress().getHostAddress());		
+		}
+	}
+
+	public class ListenClient extends Thread {
+		public void run() {
+
+		}
 	}
 
 }
