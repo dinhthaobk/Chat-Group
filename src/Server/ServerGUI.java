@@ -88,7 +88,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		ServerGUI servGUI = new ServerGUI("Server", 8080);
+		ServerGUI servGUI = new ServerGUI("Server", 5000);
 		servGUI.doShow();
 	}
 
@@ -121,8 +121,22 @@ public class ServerGUI extends JFrame implements ActionListener {
 			} else
 				server = new Server(port, this);
 			// appendEvent("Start sever !");
+			btnStart.setEnabled(false);
+			btnStop.setEnabled(true);
+			txtPort.setEditable(false);
 			new ServerRuning().start();
 
+		}
+		if (e.getSource() == btnStop) {
+			try {
+				server.stop();
+				server = null;
+				btnStop.setEnabled(false);
+				btnStart.setEnabled(true);
+				txtPort.setEditable(true);
+			} catch (Exception ex) {
+				appendEvent("ko the dung server");
+			}
 		}
 	}
 
@@ -130,6 +144,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 		public void run() {
 			try {
 				server.start();
+				appendEvent("Server is running");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

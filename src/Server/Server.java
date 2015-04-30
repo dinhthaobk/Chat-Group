@@ -1,9 +1,14 @@
 package Server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+
+import com.sun.imageio.plugins.common.InputStreamAdapter;
 
 class Server {
 
@@ -11,12 +16,12 @@ class Server {
 	private ServerGUI serverGui;
 	private ServerSocket servSocket;
 	private Socket socketClientConnect;
-	private ArrayList<Socket> listClientConnect;
+	private HashSet<Socket> connSocket;
 
 	private boolean isConnect = true;
 
 	public Server(int Port, ServerGUI serverGUI) {
-		this.port = port;
+		this.port = Port;
 		this.serverGui = serverGUI;
 	}
 
@@ -26,13 +31,36 @@ class Server {
 	}
 
 	public void start() throws IOException {
-		serverGui.appendEvent("OK");
+
+		serverGui.appendEvent("Start is click ");
+		System.out.println("Port is :  " + port);
 		servSocket = new ServerSocket(port);
-		while (isConnect) {
-			socketClientConnect = servSocket.accept();
-			serverGui.appendEvent("Accept listen :"
-					+ socketClientConnect.getInetAddress().getHostAddress());		
+		try {
+			while (true) {
+				socketClientConnect = servSocket.accept();
+				serverGui
+						.appendEvent("Accept client :"
+								+ socketClientConnect.getInetAddress()
+										.getHostAddress());
+				try (BufferedReader in = new BufferedReader(
+						new InputStreamReader(
+								socketClientConnect.getInputStream()));
+						PrintWriter out = new PrintWriter(
+								socketClientConnect.getOutputStream())) {
+					serverGui.appendRoom("Recever form client :"
+							+ in.readLine());
+				} catch (Exception ex) {
+					// No thing
+				}
+			}
+		} catch (Exception e) {
+			// / No thing
 		}
+
+	}
+
+	public class Handle extends Thread {
+
 	}
 
 	public class ListenClient extends Thread {
