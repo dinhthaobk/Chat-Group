@@ -88,7 +88,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		ServerGUI servGUI = new ServerGUI("Server", 5000);
+		ServerGUI servGUI = new ServerGUI("Server", 3333);
 		servGUI.doShow();
 	}
 
@@ -103,6 +103,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 					try {
 						server.stop();
 						server = null;
+						System.exit(0);
 					} catch (Exception ex) {
 						appendEvent("Can't exit ! Server can't stop ");
 					}
@@ -144,7 +145,6 @@ public class ServerGUI extends JFrame implements ActionListener {
 		public void run() {
 			try {
 				server.start();
-				appendEvent("Server is running");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

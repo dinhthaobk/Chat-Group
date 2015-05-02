@@ -1,98 +1,63 @@
 package Client;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+class Client {
+	private String name;
+	private String host;
 
-import com.sun.org.apache.bcel.internal.classfile.PMGClass;
-
-public class Client extends JFrame implements ActionListener {
-
-	// Varible for GUI
-	JTextField txtSend;
-	JButton btnSend;
-	JTextArea txtResult;
-	JFrame myFrame;
-	// Varible for Send and Recv
 	private BufferedReader in;
 	private PrintWriter out;
+	private ClientGUI clientGui;
 
-	public Client(String title) {
-		// GUI
-		setTitle(title);
+	public Client(String name, String host) {
+		this.name = name;
+		this.host = host;
 	}
 
-	public void doShow() {
-		setSize(400, 400);
-		setLocationRelativeTo(null);
-		addControl();
-		setResizable(false);
-		setVisible(true);
-
-	}
-
-	private void addControl() {
-		JPanel pnBorder = new JPanel();
-		pnBorder.setLayout(new BorderLayout());
-
-		JPanel pnNort = new JPanel();
-		pnNort.add(new JLabel("Message"));
-		pnBorder.add(pnNort, BorderLayout.NORTH);
-
-		JPanel pnCenter = new JPanel();
-		pnCenter.setLayout(new BoxLayout(pnCenter, BoxLayout.Y_AXIS));
-		txtResult = new JTextArea(1, 1);
-		txtResult.setSize(10, 10);
-		txtResult.setEditable(false);
-
-		pnCenter.add(new JScrollBar().add(txtResult));
-		pnCenter.add(new JLabel("Text Send"));
-		pnBorder.add(pnCenter, BorderLayout.CENTER);
-
-		JPanel pnSouth = new JPanel();
-		pnSouth.setLayout(new BoxLayout(pnSouth, BoxLayout.X_AXIS));
-		txtSend = new JTextField();
-		pnSouth.add(txtSend);
-		btnSend = new JButton("Send");
-		btnSend.addActionListener(this);
-		pnSouth.add(btnSend);
-		pnBorder.add(pnSouth, BorderLayout.SOUTH);
-
-		getContentPane().add(pnBorder);
+	public Client(String name, String host, ClientGUI clientGUI) {
+		this.name = name;
+		this.host = host;
+		this.clientGui = clientGUI;
 
 	}
 
-	public static void main(String[] args) {
-		Client client = new Client("Client Chat");
-		client.doShow();
+	public void connect() {
 
-	}
+		System.out.println(name);
+		System.out.println(host);
+		try {
+			Socket clientSocket = new Socket("localhost", 3333);
+			in = new BufferedReader(new InputStreamReader(
+					clientSocket.getInputStream()));
+			out = new PrintWriter(new OutputStreamWriter(
+					clientSocket.getOutputStream()));
 
-	private String getAdrressHost()
-	{
-		return null;
-	}
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		txtResult.append("Click");
+			while (true) {
+				String line = in.readLine();
+				if (line.startsWith("nameUse")) {
+					out.println(clientGui.getName());
+				}
+				if (line.startsWith("nameOK")) {
+					// No thing
+				}
+				if (line.startsWith("message")) {
+					clientGui.appendMessage(line.substring(8));
+				}
+				System.out.println(line);
+			}
+
+		} catch (IOException e) {
+			// No thing
+			// e.printStackTrace();
+			System.err.println("Ko connect dk !");
+		}
+
 	}
 }
