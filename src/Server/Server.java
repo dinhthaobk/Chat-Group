@@ -87,33 +87,33 @@ class Server {
 				out = new PrintWriter(new OutputStreamWriter(
 						clienSocket.getOutputStream()));
 
-				while (true) {
-					out.print("nameUse");
-					nameUse = in.readLine();	
-					if (nameUse == null)
-						return;
-					else
-						synchronized (nameUsers) {
-							if (!nameUsers.contains(nameUse))
-								nameUsers.add(nameUse);
-							else
-								break;
-						}
-				}
-				serverGui.appendEvent(nameUse + "has connect");
-				out.println("nameOK");
-				printWriter.add(out);
-
-				while (true) {
-					String input = in.readLine();
-					if (input == null)
-						return;
-					else
-						for (PrintWriter fwriter : printWriter) {
-							out.println("Message " + input);
-						}
-
-				}
+				// while (true) {
+				// out.print("nameUse");
+				// nameUse = in.readLine();
+				// if (nameUse == null)
+				// return;
+				// else
+				// synchronized (nameUsers) {
+				// if (!nameUsers.contains(nameUse))
+				// nameUsers.add(nameUse);
+				// else
+				// break;
+				// }
+				// }
+				// serverGui.appendEvent(nameUse + "has connect");
+				// out.println("nameOK");
+				// printWriter.add(out);
+				//
+				// while (true) {
+				// String input = in.readLine();
+				// if (input == null)
+				// return;
+				// else
+				// for (PrintWriter fwriter : printWriter) {
+				// out.println("Message " + input);
+				// }
+				//
+				// }
 			} catch (Exception ex) {
 				// No thing
 			} finally {
