@@ -18,8 +18,8 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 	 */
 	private static final long serialVersionUID = 1L;
 	// Varible for GUI
-	private JTextArea txtMessage, txtListUser, txtSend;
-	private JTextField txthost, txtUser;
+	private JTextArea txtMessage, txtListUser;
+	private JTextField txthost, txtUser, txtSend;
 	private JButton btnConnect, btnExit, btnLogin, btnSend;
 
 	// Varible use;
@@ -44,17 +44,32 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		JPanel pnMessage = new JPanel(new BorderLayout());
 		txtMessage = new JTextArea(10, 10);
 		txtMessage.setEditable(false);
-		txtMessage.setVisible(false);
 		pnMessage.add(new JScrollPane(txtMessage));
 		pnMessage.setBorder(BorderFactory.createTitledBorder("Message Chat"));
 		pnCenter.add(pnMessage, BorderLayout.CENTER);
-		JPanel pnTextSend = new JPanel(new BorderLayout());
-		txtSend = new JTextArea(3, 10);
-		txtSend.setLineWrap(isResizable()); // Xuong dong khi het dong
-		txtSend.setVisible(false);
+		JPanel pnTextSend = new JPanel(new FlowLayout());
+		txtSend = new JTextField(25);
+		// txtSend.setLineWrap(isResizable()); // Xuong dong khi het dong
+		txtSend.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				client.send();
+			}
+		});
+
 		pnTextSend.add(txtSend);
-		// btnSend = new JButton("Send");
-		// pnTextSend.add(btnSend);
+		btnSend = new JButton("Send");
+		btnSend.setVisible(false);
+		btnSend.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				client.send();
+
+			}
+		});
+		pnTextSend.add(btnSend);
 		pnTextSend
 				.setBorder(BorderFactory.createTitledBorder("Text to send :"));
 		pnCenter.add(pnTextSend, BorderLayout.SOUTH);
@@ -141,18 +156,12 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 					// System.out.println("Nhap thieu thong tin");
 					JOptionPane.showMessageDialog(this, "Nhập thiếu thông tin");
 				} else {
-					txtListUser.setVisible(true);
-					txtMessage.setVisible(true);
-					txtSend.setVisible(true);
 					client = new Client(getName(), getHost(), this);
-					client.start();
-					// new StartClient().start();
+					// client.start();
+					new StartClient().start();
 				}
 			} else {
 				btnLogin.setText("Đăng nhập");
-				txtListUser.setVisible(false);
-				txtMessage.setVisible(false);
-				txtSend.setVisible(false);
 				client.stop();
 				client = null;
 			}
@@ -206,8 +215,10 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
 		@Override
 		public void run() {
-			client.start();
+			if (btnLogin.getText() == "Đăng xuất")
+				client.start();
+			else
+				client.stop();
 		}
-
 	}
 }

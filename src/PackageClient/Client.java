@@ -24,7 +24,6 @@ class Client {
 		this.clientGui = clientGUI;
 		// System.out.println("Name form GUI :" + name);
 		// System.out.println("Host from GUI " + host);
-
 	}
 
 	public void send() {
@@ -45,21 +44,20 @@ class Client {
 			out = new PrintWriter(socket.getOutputStream(), true);
 			while (true) {
 				String line = in.readLine();
-				// System.out.println("Nhan tu server " + line);
-				// System.out.println("Gui ten " + name);
 				if (line.startsWith("SUBMITNAME")) {
+					System.out.println(name);
 					out.println(name);
 				}
 				if (line.startsWith("NAMEACCEPTED")) {
-					System.out.println("success");
+					// System.out.println("success");
 				}
-				System.out.println(line);
+
 				if (line.startsWith("MESSAGE")) {
-					clientGui.appendMessage(line.substring(8));
+					clientGui.appendMessage(line.substring(7));
 				}
-				System.out.println(line);
-				String reply = in.readLine();
-				clientGui.appendMessage(reply);
+
+				// String reply = in.readLine();
+				// clientGui.appendMessage(reply);
 			}
 
 		} catch (IOException e) {
