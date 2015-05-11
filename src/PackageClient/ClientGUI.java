@@ -23,18 +23,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 	private JButton btnConnect, btnExit, btnLogin, btnSend;
 
 	// Varible use;
-	private String name;
-	private String host;
-	// Varible Client
 	private Client client;
-
-	public String getName() {
-		return name;
-	}
-
-	public String getHost() {
-		return host;
-	}
 
 	public ClientGUI(String title) {
 		setTitle(title);
@@ -55,12 +44,14 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		JPanel pnMessage = new JPanel(new BorderLayout());
 		txtMessage = new JTextArea(10, 10);
 		txtMessage.setEditable(false);
+		txtMessage.setVisible(false);
 		pnMessage.add(new JScrollPane(txtMessage));
 		pnMessage.setBorder(BorderFactory.createTitledBorder("Message Chat"));
 		pnCenter.add(pnMessage, BorderLayout.CENTER);
 		JPanel pnTextSend = new JPanel(new BorderLayout());
 		txtSend = new JTextArea(3, 10);
 		txtSend.setLineWrap(isResizable()); // Xuong dong khi het dong
+		txtSend.setVisible(false);
 		pnTextSend.add(txtSend);
 		// btnSend = new JButton("Send");
 		// pnTextSend.add(btnSend);
@@ -74,12 +65,15 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		// JPanel for Login
 		JPanel pnLogin = new JPanel(new GridLayout(3, 1, 1, 1));
 		pnLogin.add(new JLabel("Host name:"));
-		txthost = new JTextField(10);
+		txthost = new JTextField("localhost", 10);
+		txthost.addActionListener(this);
 		pnLogin.add(txthost);
 		pnLogin.add(new JLabel("User name:"));
-		txtUser = new JTextField(10);
+		txtUser = new JTextField("Thao Phan", 10);
+		txtUser.addActionListener(this);
 		pnLogin.add(txtUser);
-		btnLogin = new JButton("Login");
+		btnLogin = new JButton("Đăng nhập");
+		btnLogin.addActionListener(this);
 		pnLogin.add(btnLogin);
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(this);
@@ -89,6 +83,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		// JPanel for List use
 		JPanel pnList = new JPanel(new BorderLayout());
 		txtListUser = new JTextArea();
+		txtListUser.setVisible(false);
 		pnList.add(new JScrollPane(txtListUser));
 
 		pnList.setBorder(BorderFactory
@@ -117,14 +112,48 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		String txt = txtSend.getText();
 		txtSend.setText(" ");
 		return txt;
+	}
 
+	public String getHost() {
+		return txthost.getText().trim();
+	}
+
+	public String getName() {
+		return txtUser.getText();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnExit) {
-			System.exit(0);
+			int ref = JOptionPane.showConfirmDialog(null, "Thoát chương trình",
+					"Thoát", JOptionPane.YES_NO_OPTION);
+			if (ref == JOptionPane.YES_OPTION) {
+				System.out.println("Click exit");
+				System.exit(0);
+			}
 		}
+		if (e.getSource() == btnLogin) {
+			if (btnLogin.getText() == "Đăng nhập") {
+				btnLogin.setText("Đăng xuất");
+				String host = getHost();
+				String name = getName();
+				if (host.length() == 0 || name.length() == 0) {
+					// System.out.println("Nhap thieu thong tin");
+					JOptionPane.showMessageDialog(this,
+							"Đăng nhập thành công !");
+				} else {
+					txtListUser.setVisible(true);
+					txtMessage.setVisible(true);
+					txtSend.setVisible(true);
+				}
+			} else {
+				btnLogin.setText("Đăng nhập");
+				txtListUser.setVisible(false);
+				txtMessage.setVisible(false);
+				txtSend.setVisible(false);
+			}
+		}
+
 	}
 
 	@Override
@@ -166,6 +195,15 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
+
+	}
+
+	class StartClient extends Thread {
+
+		@Override
+		public void run() {
+			client.connect();
+		}
 
 	}
 }
