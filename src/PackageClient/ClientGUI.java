@@ -139,18 +139,22 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 				String name = getName();
 				if (host.length() == 0 || name.length() == 0) {
 					// System.out.println("Nhap thieu thong tin");
-					JOptionPane.showMessageDialog(this,
-							"Đăng nhập thành công !");
+					JOptionPane.showMessageDialog(this, "Nhập thiếu thông tin");
 				} else {
 					txtListUser.setVisible(true);
 					txtMessage.setVisible(true);
 					txtSend.setVisible(true);
+					client = new Client(getName(), getHost(), this);
+					client.start();
+					// new StartClient().start();
 				}
 			} else {
 				btnLogin.setText("Đăng nhập");
 				txtListUser.setVisible(false);
 				txtMessage.setVisible(false);
 				txtSend.setVisible(false);
+				client.stop();
+				client = null;
 			}
 		}
 
@@ -202,7 +206,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
 		@Override
 		public void run() {
-			client.connect();
+			client.start();
 		}
 
 	}

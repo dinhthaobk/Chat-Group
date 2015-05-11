@@ -25,7 +25,7 @@ import javax.swing.border.TitledBorder;
 public class ServerGUI extends JFrame implements ActionListener, WindowListener {
 	private static final long serialVersionUID = 1L;
 	private JTextField txtPort;
-	private JButton btnStart, btnStop, btnExit;
+	private JButton btnStart, btnStop, btnExit, btnClear;
 	private JTextArea txtChat, txtEvent;
 	private Server server;
 	private int port;
@@ -62,7 +62,11 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		pnNort.add(btnStop);
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(this);
+
 		pnNort.add(btnExit);
+		btnClear = new JButton("Clear");
+		btnClear.addActionListener(this);
+		pnNort.add(btnClear);
 		// Include Area Event
 		JPanel pnCenter = new JPanel();
 		pnCenter.setLayout(new BorderLayout());
@@ -141,6 +145,9 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 			} catch (Exception ex) {
 				appendEvent("Không thể dừng server !");
 			}
+		}
+		if (e.getSource() == btnClear) {
+			txtEvent.setText(null);
 		}
 	}
 
