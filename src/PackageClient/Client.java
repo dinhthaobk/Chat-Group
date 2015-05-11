@@ -1,4 +1,4 @@
-package Client;
+package PackageClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,10 +28,18 @@ class Client {
 
 	}
 
-	public void connect() {
+	public void send() {
+		String message;
+		message = clientGui.getMessage();
+		if (message.length() == 0)
+			return;
+		out.println(message);
+		out.flush();
 
-		System.out.println(name);
-		System.out.println(host);
+	}
+
+	@SuppressWarnings("resource")
+	public void connect() {
 		try {
 			Socket clientSocket = new Socket("localhost", 3333);
 			in = new BufferedReader(new InputStreamReader(
@@ -39,25 +47,32 @@ class Client {
 			out = new PrintWriter(new OutputStreamWriter(
 					clientSocket.getOutputStream()));
 
-			while (true) {
-				String line = in.readLine();
-				if (line.startsWith("nameUse")) {
-					out.println(clientGui.getName());
-				}
-				if (line.startsWith("nameOK")) {
-					// No thing
-				}
-				if (line.startsWith("message")) {
-					clientGui.appendMessage(line.substring(8));
-				}
-				System.out.println(line);
-			}
+			// while (true) {
+			// // String line = in.readLine();
+			// // if (line.startsWith("nameUse")) {
+			// // out.println(clientGui.getName());
+			// // }
+			// // if (line.startsWith("nameOK")) {
+			// // // No thing
+			// // }
+			// // if (line.startsWith("message")) {
+			// // clientGui.appendMessage(line.substring(8));
+			// // }
+			// String reply = in.readLine();
+			// clientGui.appendMessage(reply);
+			// }
 
 		} catch (IOException e) {
 			// No thing
 			// e.printStackTrace();
 			System.err.println("Ko connect dk !");
 		}
+
+	}
+
+	public void sendMessage() {
+		send();
+		System.out.println("Send message" + clientGui.getMessage());
 
 	}
 }
