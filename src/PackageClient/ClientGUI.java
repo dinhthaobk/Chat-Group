@@ -20,7 +20,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 	// Varible for GUI
 	private JTextArea txtMessage, txtListUser;
 	private JTextField txthost, txtUser, txtSend;
-	private JButton btnConnect, btnExit, btnLogin, btnSend;
+	private JButton btnConnect, btnExit, btnLogin, btnSend, openBtn, saveBtn;
 
 	// Varible use;
 	private Client client;
@@ -57,7 +57,34 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 				client.send();
 			}
 		});
+		// File chooser GUI
+				JPanel pnFile= new JPanel();
+				
+		         saveBtn = new JButton("Save");
+		         openBtn = new JButton("Open");
+		         pnFile.add(saveBtn, BorderLayout.EAST);
+		         pnFile.add(openBtn, BorderLayout.WEST);
+		         pnBorder.add(pnFile, BorderLayout.SOUTH);
+		         pnFile.setVisible(true);
+		        saveBtn.addActionListener(new ActionListener() {
 
+		            @Override
+		            public void actionPerformed(ActionEvent arg0) {
+		                JFileChooser saveFile = new JFileChooser();
+		                saveFile.showSaveDialog(null);
+		            }
+		        });
+
+		        openBtn.addActionListener(new ActionListener() {
+
+		            @Override
+		            public void actionPerformed(ActionEvent arg0) {
+		                JFileChooser openFile = new JFileChooser();
+		                openFile.showOpenDialog(null);
+		            }
+		        });
+		        
+		        //ket thuc File Chooser
 		pnTextSend.add(txtSend);
 		btnSend = new JButton("Send");
 		btnSend.setVisible(false);
