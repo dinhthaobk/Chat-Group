@@ -72,7 +72,7 @@ class Server {
 		@Override
 		public void run() {
 			try {
-				servGUI.appendEvent("Server is running");
+				// servGUI.appendEvent("Server is running");
 				in = new BufferedReader(new InputStreamReader(
 						socket.getInputStream()));
 				out = new PrintWriter(socket.getOutputStream(), true);
@@ -92,7 +92,6 @@ class Server {
 
 				// Append to Event GUI
 				servGUI.appendEvent(name + " đã đăng nhập vào phòng ");
-
 				out.println("NAMEACCEPTED");
 
 				writers.add(out);

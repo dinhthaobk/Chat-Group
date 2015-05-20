@@ -16,16 +16,14 @@ class Client {
 	private PrintWriter out;
 	private ClientGUI clientGui;
 
-	public Client(String name, String host) {
-		this.name = name;
-		this.host = host;
-	}
+	Socket socket;
 
 	public Client(String name, String host, ClientGUI clientGUI) {
 		this.name = name;
 		this.host = host;
 		this.clientGui = clientGUI;
-
+		// System.out.println("Name form GUI :" + name);
+		// System.out.println("Host from GUI " + host);
 	}
 
 	public void send() {
@@ -38,29 +36,29 @@ class Client {
 
 	}
 
-	@SuppressWarnings("resource")
-	public void connect() {
+	public void start() {
 		try {
-			Socket clientSocket = new Socket("localhost", 3333);
+			socket = new Socket(host, 2345);
 			in = new BufferedReader(new InputStreamReader(
-					clientSocket.getInputStream()));
-			out = new PrintWriter(new OutputStreamWriter(
-					clientSocket.getOutputStream()));
+					socket.getInputStream()));
+			out = new PrintWriter(socket.getOutputStream(), true);
+			while (true) {
+				String line = in.readLine();
+				if (line.startsWith("SUBMITNAME")) {
+					System.out.println(name);
+					out.println(name);
+				}
+				if (line.startsWith("NAMEACCEPTED")) {
+					// System.out.println("success");
+				}
 
-			// while (true) {
-			// // String line = in.readLine();
-			// // if (line.startsWith("nameUse")) {
-			// // out.println(clientGui.getName());
-			// // }
-			// // if (line.startsWith("nameOK")) {
-			// // // No thing
-			// // }
-			// // if (line.startsWith("message")) {
-			// // clientGui.appendMessage(line.substring(8));
-			// // }
-			// String reply = in.readLine();
-			// clientGui.appendMessage(reply);
-			// }
+				if (line.startsWith("MESSAGE")) {
+					clientGui.appendMessage(line.substring(7));
+				}
+
+				// String reply = in.readLine();
+				// clientGui.appendMessage(reply);
+			}
 
 		} catch (IOException e) {
 			// No thing
@@ -74,5 +72,15 @@ class Client {
 		send();
 		System.out.println("Send message" + clientGui.getMessage());
 
+	}
+
+	public void stop() {
+		try {
+			socket.close();
+			name = null;
+			host = null;
+		} catch (Exception ex) {
+			System.out.println("Không dừng được server");
+		}
 	}
 }
