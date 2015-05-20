@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.PrintWriter;
 
 import javax.swing.*;
@@ -77,10 +78,15 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
 		        openBtn.addActionListener(new ActionListener() {
 
-		            @Override
+		        	@Override
 		            public void actionPerformed(ActionEvent arg0) {
-		                JFileChooser openFile = new JFileChooser();
-		                openFile.showOpenDialog(null);
+		                JFileChooser openFile = new JFileChooser();		                
+		                JFileChooser fileOpen = new JFileChooser();
+		                if(openFile.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
+		                	File selectedFile = openFile.getSelectedFile();
+		                	String filePath = selectedFile.getPath();
+		                	System.out.println(filePath);
+		                }		                
 		            }
 		        });
 		        
