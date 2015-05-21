@@ -22,6 +22,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 	private JTextArea txtMessage, txtListUser;
 	private JTextField txthost, txtUser, txtSend;
 	private JButton btnConnect, btnExit, btnLogin, btnSend, openBtn, saveBtn;
+	ImageIcon icon;
 
 	// Varible use;
 	private Client client;
@@ -43,7 +44,16 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		JPanel pnCenter = new JPanel();
 		pnCenter.setLayout(new BorderLayout());
 		JPanel pnMessage = new JPanel(new BorderLayout());
-		txtMessage = new JTextArea(10, 10);
+		icon = new ImageIcon("src\\PackageClient\\bg.jpg");
+		txtMessage = new JTextArea(10, 10){
+			public void paintComponent(Graphics g) {
+				Dimension d = getSize();
+				g.drawImage(icon.getImage(), 0, 0, d.width, d.height, null);
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+		};
+		icon = new ImageIcon("src\\PackageClient\\bg.jpg");
 		txtMessage.setEditable(false);
 		pnMessage.add(new JScrollPane(txtMessage));
 		pnMessage.setBorder(BorderFactory.createTitledBorder("Message Chat"));
@@ -155,6 +165,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		txtMessage.append(str);
 		txtMessage.append("\n");
 	}
+	
 
 	public String getMessage() {
 		String txt = txtSend.getText();

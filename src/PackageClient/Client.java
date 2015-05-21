@@ -63,7 +63,7 @@ class Client {
 		} catch (IOException e) {
 			// No thing
 			// e.printStackTrace();
-			System.err.println("Ko connect dk !");
+			System.err.println("Khong connect duoc !");
 		}
 
 	}

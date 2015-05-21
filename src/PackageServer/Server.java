@@ -1,5 +1,4 @@
 package PackageServer;
-// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -36,6 +35,8 @@ class Server {
 			}
 		}
 	}
+
+	
 
 	public void start() throws IOException {
 		try {
@@ -92,6 +93,7 @@ class Server {
 
 				// Append to Event GUI
 				servGUI.appendEvent(name + " đã đăng nhập vào phòng ");
+				
 				out.println("NAMEACCEPTED");
 
 				writers.add(out);
@@ -109,6 +111,7 @@ class Server {
 
 			} catch (Exception ex) {
 				servGUI.appendEvent(name + " đã thoát !");
+		
 				names.remove(name);
 
 			}

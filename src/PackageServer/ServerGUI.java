@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -22,6 +24,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+
+
 public class ServerGUI extends JFrame implements ActionListener, WindowListener {
 	private static final long serialVersionUID = 1L;
 	private JTextField txtPort;
@@ -29,6 +33,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	private JTextArea txtChat, txtEvent;
 	private Server server;
 	private int port;
+	public Hashtable<String, Server> listUser;
 
 	public ServerGUI(String title, int port) {
 		setTitle(title);
@@ -161,7 +166,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 
 		}
 	}
-
+	
 	@Override
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
