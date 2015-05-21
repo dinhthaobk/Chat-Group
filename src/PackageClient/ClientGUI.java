@@ -44,8 +44,9 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		JPanel pnCenter = new JPanel();
 		pnCenter.setLayout(new BorderLayout());
 		JPanel pnMessage = new JPanel(new BorderLayout());
-		icon = new ImageIcon("src\\PackageClient\\bg.jpg");
-		txtMessage = new JTextArea(10, 10){
+			
+		icon = new ImageIcon("background\\bg.jpg");
+		txtMessage = new JTextArea(10, 10) {
 			public void paintComponent(Graphics g) {
 				Dimension d = getSize();
 				g.drawImage(icon.getImage(), 0, 0, d.width, d.height, null);
@@ -53,7 +54,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 				super.paintComponent(g);
 			}
 		};
-		icon = new ImageIcon("src\\PackageClient\\bg.jpg");
+		// icon = new ImageIcon("src\\PackageClient\\bg.jpg");
 		txtMessage.setEditable(false);
 		pnMessage.add(new JScrollPane(txtMessage));
 		pnMessage.setBorder(BorderFactory.createTitledBorder("Message Chat"));
@@ -69,38 +70,38 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 			}
 		});
 		// File chooser GUI
-				JPanel pnFile= new JPanel();
-				
-		         saveBtn = new JButton("Save");
-		         openBtn = new JButton("Open");
-		         pnFile.add(saveBtn, BorderLayout.EAST);
-		         pnFile.add(openBtn, BorderLayout.WEST);
-		         pnBorder.add(pnFile, BorderLayout.SOUTH);
-		         pnFile.setVisible(true);
-		        saveBtn.addActionListener(new ActionListener() {
+		JPanel pnFile = new JPanel();
 
-		            @Override
-		            public void actionPerformed(ActionEvent arg0) {
-		                JFileChooser saveFile = new JFileChooser();
-		                saveFile.showSaveDialog(null);
-		            }
-		        });
+		saveBtn = new JButton("Save");
+		openBtn = new JButton("Open");
+		pnFile.add(saveBtn, BorderLayout.EAST);
+		pnFile.add(openBtn, BorderLayout.WEST);
+		pnBorder.add(pnFile, BorderLayout.SOUTH);
+		pnFile.setVisible(true);
+		saveBtn.addActionListener(new ActionListener() {
 
-		        openBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser saveFile = new JFileChooser();
+				saveFile.showSaveDialog(null);
+			}
+		});
 
-		        	@Override
-		            public void actionPerformed(ActionEvent arg0) {
-		                JFileChooser openFile = new JFileChooser();		                
-		                JFileChooser fileOpen = new JFileChooser();
-		                if(openFile.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
-		                	File selectedFile = openFile.getSelectedFile();
-		                	String filePath = selectedFile.getPath();
-		                	System.out.println(filePath);
-		                }		                
-		            }
-		        });
-		        
-		        //ket thuc File Chooser
+		openBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser openFile = new JFileChooser();
+				JFileChooser fileOpen = new JFileChooser();
+				if (openFile.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = openFile.getSelectedFile();
+					String filePath = selectedFile.getPath();
+					System.out.println(filePath);
+				}
+			}
+		});
+
+		// ket thuc File Chooser
 		pnTextSend.add(txtSend);
 		btnSend = new JButton("Send");
 		btnSend.setVisible(false);
@@ -165,7 +166,6 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		txtMessage.append(str);
 		txtMessage.append("\n");
 	}
-	
 
 	public String getMessage() {
 		String txt = txtSend.getText();
