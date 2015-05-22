@@ -15,12 +15,13 @@ class Client {
 	private BufferedReader in;
 	private PrintWriter out;
 	private ClientGUI clientGui;
-
+	private int port;
 	Socket socket;
 
-	public Client(String name, String host, ClientGUI clientGUI) {
+	public Client(String name, String host, int port, ClientGUI clientGUI) {
 		this.name = name;
 		this.host = host;
+		this.port = port;
 		this.clientGui = clientGUI;
 		// System.out.println("Name form GUI :" + name);
 		// System.out.println("Host from GUI " + host);
@@ -38,7 +39,7 @@ class Client {
 
 	public void start() {
 		try {
-			socket = new Socket(host, 3333);
+			socket = new Socket(host, port);
 			in = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(), true);
@@ -63,7 +64,7 @@ class Client {
 		} catch (IOException e) {
 			// No thing
 			// e.printStackTrace();
-			System.err.println("Khong connect duoc !");
+			System.err.println("Không kết nối được !");
 		}
 
 	}

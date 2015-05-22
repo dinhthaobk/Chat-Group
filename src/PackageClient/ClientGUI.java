@@ -20,7 +20,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 	private static final long serialVersionUID = 1L;
 	// Varible for GUI
 	private JTextArea txtMessage, txtListUser;
-	private JTextField txthost, txtUser, txtSend;
+	private JTextField txthost, txtUser, txtSend, txtPort;
 	private JButton btnConnect, btnExit, btnLogin, btnSend, openBtn, saveBtn;
 	ImageIcon icon;
 
@@ -128,19 +128,22 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		JPanel pnEast = new JPanel();
 		pnEast.setLayout(new BorderLayout());
 		// JPanel for Login
-		JPanel pnLogin = new JPanel(new GridLayout(3, 1, 1, 1));
-		pnLogin.add(new JLabel("Host name:"));
+		JPanel pnLogin = new JPanel(new GridLayout(4, 1, 1, 1));
+		pnLogin.add(new JLabel("Server:"));
 		txthost = new JTextField("localhost", 10);
 		txthost.addActionListener(this);
 		pnLogin.add(txthost);
-		pnLogin.add(new JLabel("User name:"));
+		pnLogin.add(new JLabel("Cổng:"));
+		txtPort = new JTextField("3333", 5);
+		pnLogin.add(txtPort);
+		pnLogin.add(new JLabel("Tài khoản:"));
 		txtUser = new JTextField("Thao Phan", 10);
 		txtUser.addActionListener(this);
 		pnLogin.add(txtUser);
 		btnLogin = new JButton("Đăng nhập");
 		btnLogin.addActionListener(this);
 		pnLogin.add(btnLogin);
-		btnExit = new JButton("Exit");
+		btnExit = new JButton("Thoát");
 		btnExit.addActionListener(this);
 		pnLogin.add(btnExit);
 		pnLogin.setBorder(BorderFactory.createTitledBorder("Login"));
@@ -159,6 +162,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
 		pnBorder.add(pnCenter, BorderLayout.CENTER);
 		pnBorder.add(pnEast, BorderLayout.EAST);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getContentPane();
 		add(pnBorder);
 
@@ -183,6 +187,16 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		return txthost.getText().trim();
 	}
 
+	public int getPort() {
+		int tmp = 0;
+		try {
+			tmp = Integer.parseInt(txtPort.getText().trim());
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Cổng nhập sai !");
+		}
+		return tmp;
+	}
+
 	public String getName() {
 		return txtUser.getText();
 	}
@@ -202,16 +216,17 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 				btnLogin.setText("Đăng xuất");
 				String host = getHost();
 				String name = getName();
-				if (host.length() == 0 || name.length() == 0) {
+				int port = getPort();
+				if (host.length() == 0 || name.length() == 0 || port == 0) {
 					// System.out.println("Nhap thieu thong tin");
 					JOptionPane.showMessageDialog(this, "Nhập thiếu thông tin");
 				} else {
-					client = new Client(getName(), getHost(), this);
-					// client.start();
+					client = new Client(getName(), getHost(), port, this);
 					new StartClient().start();
 				}
 			} else {
 				btnLogin.setText("Đăng nhập");
+				txtMessage.setText("");
 				client.stop();
 				client = null;
 			}

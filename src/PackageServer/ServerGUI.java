@@ -53,7 +53,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		pnBorder.setLayout(new BorderLayout());
 		JPanel pnNort = new JPanel();
 		pnNort.add(new JLabel("Port : "));
-		txtPort = new JTextField(5);
+		txtPort = new JTextField("3333", 5);
 		txtPort.setEditable(true);
 		pnNort.add(txtPort);
 		btnStart = new JButton("Start");
