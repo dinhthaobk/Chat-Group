@@ -24,8 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-
-
 public class ServerGUI extends JFrame implements ActionListener, WindowListener {
 	private static final long serialVersionUID = 1L;
 	private JTextField txtPort;
@@ -35,14 +33,14 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	private int port;
 	public Hashtable<String, Server> listUser;
 
-	public ServerGUI(String title, int port) {
+	public ServerGUI(String title) {
 		setTitle(title);
 		this.server = null;
-		this.port = port;
+		this.port = 0;
 	}
 
 	public void doShow() {
-		setSize(500, 500);
+		setSize(400, 300);
 		setLocationRelativeTo(null);
 		addControl();
 		setResizable(true);
@@ -55,7 +53,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		pnBorder.setLayout(new BorderLayout());
 		JPanel pnNort = new JPanel();
 		pnNort.add(new JLabel("Port : "));
-		txtPort = new JTextField("" + port, 10);
+		txtPort = new JTextField(5);
 		txtPort.setEditable(true);
 		pnNort.add(txtPort);
 		btnStart = new JButton("Start");
@@ -86,27 +84,25 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		pnCenter.add(new JScrollPane(txtEvent));
 		pnBorder.add(pnNort, BorderLayout.NORTH);
 		pnBorder.add(pnCenter, BorderLayout.CENTER);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getContentPane();
 		add(pnBorder);
 	}
 
+	// / Thêm sự kiện vào mục event
 	public void appendEvent(String str) {
 		txtEvent.append(str + "\n");
 	}
 
-	// public void appendRoom(String str) {
-	// txtChat.append(str + "\n");
-
-	// }
-
 	public static void main(String[] args) {
-		ServerGUI servGUI = new ServerGUI("Server", 2345);
+		ServerGUI servGUI = new ServerGUI("Server");
 		servGUI.doShow();
 	}
 
 	// Action
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// Sự kiện nhấn nút thoát
 		if (e.getSource() == btnExit) {
 			int ref = JOptionPane.showConfirmDialog(null, "Exit", "Exit",
 					JOptionPane.YES_NO_OPTION);
@@ -124,21 +120,31 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 					System.exit(0);
 			}
 		}
+
+		// Sự kiện nhấn nút bắt đầu
 		if (e.getSource() == btnStart) {
+			// Lấy số hiệu cổng
+			try {
+				port = Integer.parseInt(txtPort.getText());
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(null,
+						"Địa chỉ cổng không hợp lệ !");
+				return;
+			}
+
 			if (server != null) {
 				server.stop();
 				server = null;
 				btnStart.setEnabled(true);
 				btnStop.setEnabled(false);
 				txtPort.setEditable(true);
-			} else
+			} else {
 				server = new Server(port, this);
-			// appendEvent("Start sever !");
-			btnStart.setEnabled(false);
-			btnStop.setEnabled(true);
-			txtPort.setEditable(false);
-			new ServerRuning().start();
-
+				btnStart.setEnabled(false);
+				btnStop.setEnabled(true);
+				txtPort.setEditable(false);
+				new ServerRuning().start();
+			}
 		}
 		if (e.getSource() == btnStop) {
 			try {
@@ -161,12 +167,13 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 			try {
 				server.start();
 			} catch (IOException e) {
-				System.out.println("ko the start!");
+				JOptionPane.showMessageDialog(null,
+						"Server không thể khởi động");
 			}
 
 		}
 	}
-	
+
 	@Override
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub

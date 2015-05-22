@@ -44,9 +44,14 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		JPanel pnCenter = new JPanel();
 		pnCenter.setLayout(new BorderLayout());
 		JPanel pnMessage = new JPanel(new BorderLayout());
-			
+
 		icon = new ImageIcon("background\\bg.jpg");
 		txtMessage = new JTextArea(10, 10) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void paintComponent(Graphics g) {
 				Dimension d = getSize();
 				g.drawImage(icon.getImage(), 0, 0, d.width, d.height, null);
@@ -55,6 +60,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 			}
 		};
 		// icon = new ImageIcon("src\\PackageClient\\bg.jpg");
+
 		txtMessage.setEditable(false);
 		pnMessage.add(new JScrollPane(txtMessage));
 		pnMessage.setBorder(BorderFactory.createTitledBorder("Message Chat"));

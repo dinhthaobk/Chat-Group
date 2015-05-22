@@ -38,7 +38,7 @@ class Client {
 
 	public void start() {
 		try {
-			socket = new Socket(host, 2345);
+			socket = new Socket(host, 3333);
 			in = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(), true);

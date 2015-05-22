@@ -1,7 +1,10 @@
 package PackageServer;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
+import javax.swing.JOptionPane;
 
 class Server {
 
@@ -27,16 +30,14 @@ class Server {
 	public void stop() {
 		if (servSocket != null) {
 			try {
-				servGUI.appendEvent("Server đã đóng");
+				// servGUI.appendEvent("Server đã đóng");
 				servSocket.close();
 
 			} catch (Exception ex) {
-				// No thing
+				servGUI.appendEvent("Không thể đóng server !");
 			}
 		}
 	}
-
-	
 
 	public void start() throws IOException {
 		try {
@@ -53,10 +54,11 @@ class Server {
 			}
 
 		} catch (Exception e) {
-			servGUI.appendEvent("Không kết nối được client");
+			servGUI.appendEvent("Server đã đóng !");
 		}
 	}
 
+	// Thread để lắng nghe kết nối từ client
 	public class ClientConnect extends Thread {
 
 		private Socket socket;
@@ -73,7 +75,6 @@ class Server {
 		@Override
 		public void run() {
 			try {
-				// servGUI.appendEvent("Server is running");
 				in = new BufferedReader(new InputStreamReader(
 						socket.getInputStream()));
 				out = new PrintWriter(socket.getOutputStream(), true);
@@ -83,6 +84,7 @@ class Server {
 					System.out.println("Name login :" + name);
 					if (name == null)
 						return;
+					// Đồng bộ tên lên server
 					synchronized (names) {
 						if (!names.contains(name)) {
 							names.add(name);
@@ -93,7 +95,7 @@ class Server {
 
 				// Append to Event GUI
 				servGUI.appendEvent(name + " đã đăng nhập vào phòng ");
-				
+
 				out.println("NAMEACCEPTED");
 
 				writers.add(out);
@@ -104,16 +106,14 @@ class Server {
 						return;
 					}
 					for (PrintWriter writer : writers) {
-						writer.println("MESSAGE" + name + " send :" + input);
-						System.out.println(name + ": " + input);
+						writer.println("MESSAGE" + name + "  :" + input);
+						// System.out.println(name + ": " + input);
 					}
 				}
 
 			} catch (Exception ex) {
 				servGUI.appendEvent(name + " đã thoát !");
-		
 				names.remove(name);
-
 			}
 		}
 	}
