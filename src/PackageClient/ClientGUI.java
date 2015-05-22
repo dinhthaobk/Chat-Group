@@ -229,6 +229,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 				txtMessage.setText("");
 				client.stop();
 				client = null;
+
 			}
 		}
 

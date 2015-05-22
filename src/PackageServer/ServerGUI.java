@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -153,6 +154,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 				btnStop.setEnabled(false);
 				btnStart.setEnabled(true);
 				txtPort.setEditable(true);
+				txtEvent.setText("");
 			} catch (Exception ex) {
 				appendEvent("Không thể dừng server !");
 			}
@@ -169,6 +171,9 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null,
 						"Server không thể khởi động");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 		}
