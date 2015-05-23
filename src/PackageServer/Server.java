@@ -17,6 +17,12 @@ class Server {
 	private int port;
 	private ServerGUI servGUI;
 	private ServerSocket servSocket;
+	int bufferSize;
+	
+	private InputStream is;
+	private FileOutputStream fos;
+	private BufferedOutputStream bos;
+	
 	// Mảng chứa các tên đăng nhập vào
 	private ArrayList<String> names;
 	// Mảng chứa các luồng ghi
@@ -175,6 +181,35 @@ class Server {
 				// for(String name : names){ listUser +=name.toString()+"\n";}
 				// Thực hiện quá trình gửi lại cho các client
 				while (true) {
+					//send file
+					try {
+				        is = socket.getInputStream();
+
+				        bufferSize = socket.getReceiveBufferSize();
+				        System.out.println("Buffer size: " + bufferSize);
+				    } catch (IOException ex) {
+				        System.out.println("Can't get socket input stream. ");
+				    }
+					 try {
+					        fos = new FileOutputStream("F:\\");
+					        bos = new BufferedOutputStream(fos);
+
+					    } catch (FileNotFoundException ex) {
+					        System.out.println("File not found. ");
+					    }
+
+					    byte[] bytes = new byte[bufferSize];
+
+					    int count;
+
+					    while ((count = is.read(bytes)) > 0) {
+					        bos.write(bytes, 0, count);
+					    }
+
+					    bos.flush();
+					    bos.close();
+					    is.close();
+					//ket thuc send file
 					String input = in.readLine();
 					/*
 					 * if (input == null) { return; }

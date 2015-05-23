@@ -1,6 +1,10 @@
 package PackageClient;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -57,7 +61,27 @@ class Client {
 		out.flush();
 
 	}
+	//send file
+		public void sendFile() throws IOException{
+			String filePath= clientGui.getFilePath();
+			File file = new File(filePath);
+			long fileLength= file.length();
+			byte[] bytes = new byte[(int)fileLength];
+			FileInputStream fis = new FileInputStream(file);
+		    BufferedInputStream bis = new BufferedInputStream(fis);
+		    BufferedOutputStream out = new BufferedOutputStream(socket.getOutputStream());
 
+		    int count;
+
+		    while ((count = bis.read(bytes)) > 0) {
+		        out.write(bytes, 0, count);
+		    }
+		    out.flush();
+		    out.close();
+		    fis.close();
+		    bis.close();
+		}
+		// ket thuc
 	public void start() {
 		try {
 			socket = new Socket(host, port);

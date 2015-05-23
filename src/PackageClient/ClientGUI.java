@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.swing.*;
@@ -25,12 +26,19 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
 	protected JTextArea txtMessage, txtListUser;
 	protected JTextField txthost, txtUser, txtSend, txtPort;
-	protected JButton btnConnect, btnExit, btnLogin, btnSend, openBtn, saveBtn;
+	protected JButton btnConnect, btnExit, btnLogin, btnSend, sendFileBtn, openBtn,saveBtn;
 	ImageIcon icon;
-
+	protected String filePath, fileSave;
 	// Varible use;
 	private Client client;
+	
+	public String getFileSave() {
+		return fileSave;
+	}
 
+	public String getFilePath() {
+		return filePath;
+	}
 	public ClientGUI(String title) {
 		setTitle(title);
 		setSize(600, 400);
@@ -88,36 +96,59 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 			}
 		});
 		// File chooser GUI
-		JPanel pnFile = new JPanel();
+				JPanel pnFile= new JPanel();
+				 saveBtn = new JButton("Save");
+		         sendFileBtn = new JButton("Send");
+		         openBtn = new JButton("Open");
+		         pnFile.add(sendFileBtn, BorderLayout.WEST);
+		         pnFile.add(openBtn, BorderLayout.EAST);
+		         pnFile.add(saveBtn,BorderLayout.CENTER);
+		         pnBorder.add(pnFile, BorderLayout.SOUTH);
+		         pnFile.setVisible(true);
+		         //send file button
+		        sendFileBtn.addActionListener(new ActionListener() {
 
-		saveBtn = new JButton("Save");
-		openBtn = new JButton("Open");
-		pnFile.add(saveBtn, BorderLayout.EAST);
-		pnFile.add(openBtn, BorderLayout.WEST);
-		pnBorder.add(pnFile, BorderLayout.SOUTH);
-		pnFile.setVisible(true);
-		saveBtn.addActionListener(new ActionListener() {
+		            @Override
+		            public void actionPerformed(ActionEvent arg0) {
+		                try {
+							client.sendFile();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		            }
+		        });
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser saveFile = new JFileChooser();
-				saveFile.showSaveDialog(null);
-			}
-		});
+		        openBtn.addActionListener(new ActionListener() {
 
-		openBtn.addActionListener(new ActionListener() {
+		            @Override
+		            public void actionPerformed(ActionEvent arg0) {
+		                JFileChooser openFile = new JFileChooser();
+		                
+		                //JFileChooser fileOpen = new JFileChooser();
+		                if(openFile.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
+		                	File selectedFile = openFile.getSelectedFile();
+		                	filePath = selectedFile.getPath();
+		                	System.out.println(filePath);
+		                }
+		                
+		            }
+		        });
+		        saveBtn.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser openFile = new JFileChooser();
-				JFileChooser fileOpen = new JFileChooser();
-				if (openFile.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					File selectedFile = openFile.getSelectedFile();
-					String filePath = selectedFile.getPath();
-					System.out.println(filePath);
-				}
-			}
-		});
+		            @Override
+		            public void actionPerformed(ActionEvent arg0) {
+		                JFileChooser saveFile = new JFileChooser();
+		                if(saveFile.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
+		                	File selectedSaveFile = saveFile.getSelectedFile();
+		                	fileSave = selectedSaveFile.getPath();
+		                	System.out.println(fileSave);
+		                }
+		                
+		            }
+		        });
+		        
+		        //ket thuc File Chooser
 
 		// ket thuc File Chooser
 		pnTextSend.add(txtSend);
