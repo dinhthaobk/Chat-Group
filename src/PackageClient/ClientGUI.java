@@ -12,6 +12,8 @@ import java.io.PrintWriter;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+
+
 public class ClientGUI extends JFrame implements ActionListener, WindowListener {
 
 	/**
@@ -19,9 +21,11 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 	 */
 	private static final long serialVersionUID = 1L;
 	// Varible for GUI
-	private JTextArea txtMessage, txtListUser;
-	private JTextField txthost, txtUser, txtSend, txtPort;
-	private JButton btnConnect, btnExit, btnLogin, btnSend, openBtn, saveBtn;
+	
+
+	protected JTextArea txtMessage, txtListUser;
+	protected JTextField txthost, txtUser, txtSend, txtPort;
+	protected JButton btnConnect, btnExit, btnLogin, btnSend, openBtn, saveBtn;
 	ImageIcon icon;
 
 	// Varible use;
@@ -45,7 +49,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		pnCenter.setLayout(new BorderLayout());
 		JPanel pnMessage = new JPanel(new BorderLayout());
 
-		icon = new ImageIcon("background\\bg.jpg");
+		icon = new ImageIcon("background\\btn.jpg");
 		txtMessage = new JTextArea(10, 10) {
 			/**
 			 * 
@@ -73,6 +77,14 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				client.send();
+				//////////////////////////////////////////
+				
+				if(e.getSource()==btnLogin){
+					client.checkLogin(txtUser.getName());
+					txtListUser.setText(txtUser.getName());
+					
+				}
+				
 			}
 		});
 		// File chooser GUI
@@ -133,11 +145,16 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		txthost = new JTextField("localhost", 10);
 		txthost.addActionListener(this);
 		pnLogin.add(txthost);
+
+		pnLogin.add(new JLabel("User name:"));
+		txtUser = new JTextField(" ", 10);
+
 		pnLogin.add(new JLabel("Cổng:"));
 		txtPort = new JTextField("3333", 5);
 		pnLogin.add(txtPort);
 		pnLogin.add(new JLabel("Tài khoản:"));
 		txtUser = new JTextField("Thao Phan", 10);
+
 		txtUser.addActionListener(this);
 		pnLogin.add(txtUser);
 		btnLogin = new JButton("Đăng nhập");
@@ -151,7 +168,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		// JPanel for List use
 		JPanel pnList = new JPanel(new BorderLayout());
 		txtListUser = new JTextArea();
-		txtListUser.setVisible(false);
+		txtListUser.setEditable(false);
 		pnList.add(new JScrollPane(txtListUser));
 
 		pnList.setBorder(BorderFactory
@@ -170,13 +187,21 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
 	public static void main(String[] args) {
 		ClientGUI clientGui = new ClientGUI("Client");
+		
 	}
 
 	public void appendMessage(String str) {
 		txtMessage.append(str);
 		txtMessage.append("\n");
+
 	}
 
+	public void appendListOnline(String str) {
+		txtListUser.setText("");
+		txtListUser.append(str);
+		txtListUser.append("\n");
+	}
+	
 	public String getMessage() {
 		String txt = txtSend.getText();
 		txtSend.setText(" ");
@@ -212,6 +237,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 			}
 		}
 		if (e.getSource() == btnLogin) {
+			
 			if (btnLogin.getText() == "Đăng nhập") {
 				btnLogin.setText("Đăng xuất");
 				String host = getHost();
@@ -223,6 +249,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 				} else {
 					client = new Client(getName(), getHost(), port, this);
 					new StartClient().start();
+					client.checkLogin(getName());
 				}
 			} else {
 				btnLogin.setText("Đăng nhập");
@@ -231,6 +258,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 				client = null;
 
 			}
+			//client.checkLogin(getName());
 		}
 
 	}
@@ -288,3 +316,4 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		}
 	}
 }
+

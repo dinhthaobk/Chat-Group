@@ -31,7 +31,6 @@ class Client {
 		this.clientGui = clientGUI;
 		// System.out.println("Name form GUI :" + name);
 		// System.out.println("Host from GUI " + host);
-
 		try {
 			conn = DriverManager.getConnection(
 					"jdbc:mysql://localhost:3306/chatnhom", "root", "admin");
@@ -40,6 +39,7 @@ class Client {
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
+
 
 	}
 
@@ -77,6 +77,11 @@ class Client {
 				if (line.startsWith("MESSAGE")) {
 					clientGui.appendMessage(line.substring(7));
 				}
+				
+				if (line.startsWith("LIST_ONLINE")) {
+					clientGui.appendListOnline(line.substring(12));
+					
+				}
 
 				// String reply = in.readLine();
 				// clientGui.appendMessage(reply);
@@ -106,4 +111,25 @@ class Client {
 			System.out.println("Không dừng được server");
 		}
 	}
+	//////////////////////////////////////////////////
+	public boolean checkLogin(String nick){
+		
+		if(nick.compareTo("")==0)
+			return false;
+		else{
+			//  send(nick);
+			return true;
+			/*int sst = Integer.parseInt(getMSG());
+			if(sst==0)
+				 return false;
+			else return true;*/
+		}
+	}
+	public void send(String data) {
+	// 	out.println(data);
+		out.flush();
+		System.out.println("Send message" + data);
+
+	}
+	//////////////////////////////////////////////////////////
 }

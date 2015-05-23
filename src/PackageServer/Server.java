@@ -22,6 +22,8 @@ class Server {
 	// Mảng chứa các luồng ghi
 	private ArrayList<PrintWriter> writers;
 
+	private String listUser = "";
+
 	Connection conn = null;
 	Statement stmt = null;
 
@@ -49,6 +51,7 @@ class Server {
 			}
 		}
 	}
+
 
 	public void start() throws IOException, SQLException {
 
@@ -152,33 +155,57 @@ class Server {
 						}
 					}
 				}
-
+				// //
+				listUser = "";
+				for (String object : names)
+					listUser += "," + object;
+				// //
 				// Append to Event GUI
 				servGUI.appendEvent(name + " đã đăng nhập vào phòng ");
 
+
 				out.println("NAMEACCEPTED");
 
+				out.println("NAMEACCEPTED");
+				//out.println("LIST_ONLINE" + listUser);
 				writers.add(out);
+				for (PrintWriter writer : writers) {
+					writer.println("LIST_ONLINE" + listUser);
+				}
+				// for(String name : names){ listUser +=name.toString()+"\n";}
 				// Thực hiện quá trình gửi lại cho các client
 				while (true) {
 					String input = in.readLine();
-					if (input == null) {
-						return;
-					}
+					/*
+					 * if (input == null) { return; }
+					 */
 					for (PrintWriter writer : writers) {
 						writer.println("MESSAGE" + name + "  :" + input);
 						// System.out.println(name + ": " + input);
 					}
+					
 				}
 
 			} catch (Exception ex) {
 				servGUI.appendEvent(name + " đã thoát !");
+
+
+				names.remove(name);
+				// //
+				listUser = "";
+				for (String object : names)
+					listUser += "," + object;
+				for (PrintWriter writer : writers) {
+					writer.println("LIST_ONLINE" + listUser);
+				}
+
 				names.remove(name);
 				try {
 					deleteUser(stmt, name);
 				} catch (SQLException e) {
 					System.out.println(e.getMessage());
 				}
+
 			}
 		}
 	}
