@@ -18,11 +18,11 @@ class Server {
 	private ServerGUI servGUI;
 	private ServerSocket servSocket;
 	int bufferSize;
-	
+
 	private InputStream is;
 	private FileOutputStream fos;
 	private BufferedOutputStream bos;
-	
+
 	// Mảng chứa các tên đăng nhập vào
 	private ArrayList<String> names;
 	// Mảng chứa các luồng ghi
@@ -30,12 +30,12 @@ class Server {
 
 	private String listUser = "";
 
+	// Biến phục vụ cho Database
 	Connection conn = null;
 	Statement stmt = null;
-
 	String ip;
 
-	// Constructer
+	// Hàm khởi tạo mặc định
 	public Server(int Port, ServerGUI serverGUI) {
 		this.port = Port;
 		this.servGUI = serverGUI;
@@ -49,20 +49,21 @@ class Server {
 	public void stop() {
 		if (servSocket != null) {
 			try {
-				// servGUI.appendEvent("Server đã đóng");
+				servGUI.appendEvent("Thông báo : Server đã được đóng trên cổng "
+						+ port);
 				servSocket.close();
 
 			} catch (Exception ex) {
-				servGUI.appendEvent("Không thể đóng server !");
+				JOptionPane.showMessageDialog(null,
+						"Không thể đóng server trên cổng " + port,
+						"Cảnh báo !", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
 
-
 	public void start() throws IOException, SQLException {
 
-		// Cho server kết nối CSDL
-
+		// Đoạn phục vụ cho Server kết nối databases
 		try {
 			conn = DriverManager.getConnection(
 					"jdbc:mysql://localhost:3306/chatnhom", "root", "admin");
@@ -72,17 +73,14 @@ class Server {
 			System.out.println(ex.getMessage());
 		}
 
-		// Thực hiện thêm thử
-		// addUser(conn, "Thao Phan", "192.168.1.1");
-		// Xoa thu
-		// deleteUser(stmt, "12");
-		// System.out.println("Them ok");
-		// Thực hiện mở server
+		// Đoạn chương trình khởi động Socket
 		try {
 			servSocket = new ServerSocket(port);
-			servGUI.appendEvent("Server đã được mở trên cổng :" + port);
+			servGUI.appendEvent("Thông báo :Server đã được mở trên cổng :"
+					+ port);
 		} catch (Exception ex) {
-			servGUI.appendEvent("Không tạo mới được server trên cổng :" + port);
+			servGUI.appendEvent("Cảnh báo :Không tạo mới được server trên cổng :"
+					+ port);
 		}
 		try {
 
@@ -92,16 +90,14 @@ class Server {
 			}
 
 		} catch (Exception e) {
-			servGUI.appendEvent("Server đã đóng !");
+			servGUI.appendEvent("Cảnh báo : Server không thể lắng nghe trên cổng "
+					+ port);
 		}
 	}
 
 	// Thêm người dùng vào CSDL
 	public void addUser(Connection conn, String name, String ip) {
 		System.out.println("Them nguoi dung vao CSDL");
-		// String query = "Insert into danhsach value ('" + name + "','" +
-		// ip
-		// + "');";
 		String queryStr = "insert ignore into danhsach values(?,?);";
 		try (PreparedStatement addStmt = conn.prepareStatement(queryStr)) {
 			addStmt.setString(1, name);
@@ -121,7 +117,6 @@ class Server {
 				+ "';";
 		int rtUpdate = stmt.executeUpdate(query);
 		System.out.println(rtUpdate);
-
 	}
 
 	// Thread để lắng nghe kết nối từ client
@@ -141,8 +136,8 @@ class Server {
 		@Override
 		public void run() {
 			try {
-				ip = socket.getInetAddress().getHostAddress();
-				System.out.println(ip);
+				ip = socket.getInetAddress().getHostAddress(); // Lấy địa chỉ IP
+				// System.out.println(ip);
 				in = new BufferedReader(new InputStreamReader(
 						socket.getInputStream()));
 				out = new PrintWriter(socket.getOutputStream(), true);
@@ -162,69 +157,66 @@ class Server {
 					}
 				}
 				// //
-				listUser = "";
-				for (String object : names)
-					listUser += "," + object;
+				// listUser = "";
+				// for (String object : names)
+				// listUser += "," + object;
 				// //
 				// Append to Event GUI
 				servGUI.appendEvent(name + " đã đăng nhập vào phòng ");
 
+				out.println("NAMEACCEPTED" + name);
 
-				out.println("NAMEACCEPTED");
-
-				out.println("NAMEACCEPTED");
-				//out.println("LIST_ONLINE" + listUser);
 				writers.add(out);
-				for (PrintWriter writer : writers) {
-					writer.println("LIST_ONLINE" + listUser);
-				}
+				// for (PrintWriter writer : writers) {
+				// writer.println("LIST_ONLINE" + listUser);
+				// }
 				// for(String name : names){ listUser +=name.toString()+"\n";}
 				// Thực hiện quá trình gửi lại cho các client
 				while (true) {
-					//send file
-					try {
-				        is = socket.getInputStream();
-
-				        bufferSize = socket.getReceiveBufferSize();
-				        System.out.println("Buffer size: " + bufferSize);
-				    } catch (IOException ex) {
-				        System.out.println("Can't get socket input stream. ");
-				    }
-					 try {
-					        fos = new FileOutputStream("F:\\");
-					        bos = new BufferedOutputStream(fos);
-
-					    } catch (FileNotFoundException ex) {
-					        System.out.println("File not found. ");
-					    }
-
-					    byte[] bytes = new byte[bufferSize];
-
-					    int count;
-
-					    while ((count = is.read(bytes)) > 0) {
-					        bos.write(bytes, 0, count);
-					    }
-
-					    bos.flush();
-					    bos.close();
-					    is.close();
-					//ket thuc send file
+					// send file
+					// try {
+					// is = socket.getInputStream();
+					//
+					// bufferSize = socket.getReceiveBufferSize();
+					// System.out.println("Buffer size: " + bufferSize);
+					// } catch (IOException ex) {
+					// System.out.println("Can't get socket input stream. ");
+					// }
+					// try {
+					// fos = new FileOutputStream("F:\\");
+					// bos = new BufferedOutputStream(fos);
+					//
+					// } catch (FileNotFoundException ex) {
+					// System.out.println("File not found. ");
+					// }
+					//
+					// byte[] bytes = new byte[bufferSize];
+					//
+					// int count;
+					//
+					// while ((count = is.read(bytes)) > 0) {
+					// bos.write(bytes, 0, count);
+					// }
+					//
+					// bos.flush();
+					// bos.close();
+					// is.close();
+					// // ket thuc send file
 					String input = in.readLine();
-					/*
-					 * if (input == null) { return; }
-					 */
+
+					if (input == null) {
+						return;
+					}
+
 					for (PrintWriter writer : writers) {
 						writer.println("MESSAGE" + name + "  :" + input);
-						// System.out.println(name + ": " + input);
+						System.out.println(name + ": " + input);
 					}
-					
+
 				}
 
 			} catch (Exception ex) {
 				servGUI.appendEvent(name + " đã thoát !");
-
-
 				names.remove(name);
 				// //
 				listUser = "";

@@ -3,7 +3,6 @@ package PackageServer;
 import java.awt.*;
 import javax.swing.*;
 import java.io.*;
-import java.util.*;
 import java.sql.*;
 import java.awt.event.*;
 
@@ -14,7 +13,6 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	private JTextArea txtEvent;
 	private Server server;
 	private int port;
-	public Hashtable<String, Server> listUser;
 
 	// Hàm khởi tạo mặc định
 	public ServerGUI(String title) {
@@ -100,8 +98,8 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	public void actionPerformed(ActionEvent e) {
 		// Sự kiện nhấn nút thoát
 		if (e.getSource() == btnExit) {
-			int ref = JOptionPane.showConfirmDialog(null, "Exit", "Exit",
-					JOptionPane.YES_NO_OPTION);
+			int ref = JOptionPane.showConfirmDialog(null, "Tắt Server ?",
+					"Thông báo !", JOptionPane.YES_NO_OPTION);
 			if (ref == JOptionPane.YES_OPTION) {
 				if (server != null)
 					try {
@@ -109,7 +107,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 						server = null;
 						System.exit(0);
 					} catch (Exception ex) {
-						appendEvent("Can't exit ! Server can't stop ");
+						appendEvent("Cảnh báo! Không thể dừng server");
 					}
 
 				else
@@ -119,15 +117,16 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 
 		// Sự kiện nhấn nút bắt đầu
 		if (e.getSource() == btnStart) {
-			// Lấy số hiệu cổng
+			// Lấy số hiệu cổng và kiểm tra tính hợp lệ
 			try {
 				port = Integer.parseInt(txtPort.getText());
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null,
-						"Địa chỉ cổng không hợp lệ !");
+						"Địa chỉ cổng không hợp lệ !", "Cảnh báo !",
+						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-
+			// Đóng server trước khi mở
 			if (server != null) {
 				server.stop();
 				server = null;
@@ -135,6 +134,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 				btnStop.setEnabled(false);
 				txtPort.setEditable(true);
 			} else {
+				// Mở server
 				server = new Server(port, this);
 				btnStart.setEnabled(false);
 				btnStop.setEnabled(true);
@@ -149,9 +149,9 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 				btnStop.setEnabled(false);
 				btnStart.setEnabled(true);
 				txtPort.setEditable(true);
-				txtEvent.setText("");
+				// txtEvent.setText("");
 			} catch (Exception ex) {
-				appendEvent("Không thể dừng server !");
+				appendEvent("Cảnh báo ! Không thể dừng được Server ");
 			}
 		}
 		if (e.getSource() == btnClear) {
@@ -165,10 +165,10 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 				server.start();
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null,
-						"Server không thể khởi động");
+						"Server không thể khởi động ", "Cảnh báo !",
+						JOptionPane.ERROR_MESSAGE);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println(e.getMessage());
 			}
 
 		}
