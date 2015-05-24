@@ -100,12 +100,12 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					client.sendFile();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				// try {
+				// // client.sendFile();
+				// } catch (IOException e) {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
+				// }
 			}
 		});
 

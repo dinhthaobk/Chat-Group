@@ -144,7 +144,7 @@ class Server {
 				while (true) {
 					out.println("SUBMITNAME");
 					name = in.readLine();
-					System.out.println("Name login :" + name);
+					// System.out.println("Name login :" + name);
 					if (name == null)
 						return;
 					// Đồng bộ tên lên server
@@ -153,24 +153,29 @@ class Server {
 							names.add(name);
 							addUser(conn, name, ip);
 							break;
+						} else {
+							out.println("CANCELNAME");
+							break;
 						}
 					}
 				}
-				// //
-				// listUser = "";
-				// for (String object : names)
-				// listUser += "," + object;
-				// //
+				// Phần thực hiện thêm người dùng - Linh Trang
+				listUser = "";
+				for (String object : names)
+					listUser += "," + object;
+				//
 				// Append to Event GUI
 				servGUI.appendEvent(name + " đã đăng nhập vào phòng ");
 
-				out.println("NAMEACCEPTED" + name);
+				out.println("NAMEACCEPTED");
 
 				writers.add(out);
-				// for (PrintWriter writer : writers) {
-				// writer.println("LIST_ONLINE" + listUser);
-				// }
-				// for(String name : names){ listUser +=name.toString()+"\n";}
+				for (PrintWriter writer : writers) {
+					writer.println("LIST_ONLINE" + listUser);
+				}
+				for (String name : names) {
+					listUser += name.toString() + "\n";
+				}
 				// Thực hiện quá trình gửi lại cho các client
 				while (true) {
 					// send file
@@ -202,8 +207,8 @@ class Server {
 					// bos.close();
 					// is.close();
 					// // ket thuc send file
+					
 					String input = in.readLine();
-
 					if (input == null) {
 						return;
 					}
@@ -228,6 +233,7 @@ class Server {
 
 				names.remove(name);
 				try {
+					// Xóa người dùng khỏi CSDL
 					deleteUser(stmt, name);
 				} catch (SQLException e) {
 					System.out.println(e.getMessage());
