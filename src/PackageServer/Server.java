@@ -214,6 +214,10 @@ class Server {
 					// is.close();
 					// // ket thuc send file
 
+					
+					
+					
+					
 					String input = in.readLine();
 					if (input == null) {
 						return;

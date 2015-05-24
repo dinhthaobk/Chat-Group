@@ -3,6 +3,8 @@ package PackageClient;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.sql.SQLException;
+
 import javax.swing.*;
 
 public class ClientGUI extends JFrame implements ActionListener, WindowListener {
@@ -16,7 +18,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 	protected JTextArea txtMessage, txtListUser;
 	protected JTextField txthost, txtUser, txtSend, txtPort;
 	protected JButton btnConnect, btnExit, btnLogin, btnSend, sendFileBtn,
-			openBtn, saveBtn;
+			openBtn, saveBtn, btnTuyChon, btnGuiFile;
 	protected String filePath, fileSave;
 	// Varible use;
 	private Client client;
@@ -80,72 +82,67 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 							"Không thể gửi tin nhắn !\n Kiểm tra lại ",
 							"Cảnh báo", JOptionPane.ERROR_MESSAGE);
 				}
-				// ////////////////////////////////////////
-				//
-				// if (e.getSource() == btnLogin) {
-				// client.checkLogin(txtUser.getName());
-				// txtListUser.setText(txtUser.getName());
-				//
-				// }
-
 			}
 		});
+
+		// ///////// Phan Huy //////////////
 		// File chooser GUI
-		JPanel pnFile = new JPanel();
-		saveBtn = new JButton("Save");
-		sendFileBtn = new JButton("Send");
-		openBtn = new JButton("Open");
-		pnFile.add(sendFileBtn, BorderLayout.WEST);
-		pnFile.add(openBtn, BorderLayout.EAST);
-		pnFile.add(saveBtn, BorderLayout.CENTER);
-		pnBorder.add(pnFile, BorderLayout.SOUTH);
-		pnFile.setVisible(true);
-		// send file button
-		sendFileBtn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// try {
-				// // client.sendFile();
-				// } catch (IOException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-			}
-		});
-
-		openBtn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser openFile = new JFileChooser();
-
-				// JFileChooser fileOpen = new JFileChooser();
-				if (openFile.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					File selectedFile = openFile.getSelectedFile();
-					filePath = selectedFile.getPath();
-					System.out.println(filePath);
-				}
-
-			}
-		});
-		saveBtn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser saveFile = new JFileChooser();
-				if (saveFile.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					File selectedSaveFile = saveFile.getSelectedFile();
-					fileSave = selectedSaveFile.getPath();
-					System.out.println(fileSave);
-				}
-
-			}
-		});
-
-		// ket thuc File Chooser
+		// JPanel pnFile = new JPanel();
+		// saveBtn = new JButton("Save");
+		// sendFileBtn = new JButton("Send");
+		// openBtn = new JButton("Open");
+		// pnFile.add(sendFileBtn, BorderLayout.WEST);
+		// pnFile.add(openBtn, BorderLayout.EAST);
+		// pnFile.add(saveBtn, BorderLayout.CENTER);
+		// pnBorder.add(pnFile, BorderLayout.SOUTH);
+		// pnFile.setVisible(true);
+		// // send file button
+		// sendFileBtn.addActionListener(new ActionListener() {
+		//
+		// @Override
+		// public void actionPerformed(ActionEvent arg0) {
+		// // try {
+		// // // client.sendFile();
+		// // } catch (IOException e) {
+		// // // TODO Auto-generated catch block
+		// // e.printStackTrace();
+		// // }
+		// }
+		// });
+		//
+		// openBtn.addActionListener(new ActionListener() {
+		//
+		// @Override
+		// public void actionPerformed(ActionEvent arg0) {
+		// JFileChooser openFile = new JFileChooser();
+		//
+		// // JFileChooser fileOpen = new JFileChooser();
+		// if (openFile.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+		// File selectedFile = openFile.getSelectedFile();
+		// filePath = selectedFile.getPath();
+		// System.out.println(filePath);
+		// }
+		//
+		// }
+		// });
+		// saveBtn.addActionListener(new ActionListener() {
+		//
+		// @Override
+		// public void actionPerformed(ActionEvent arg0) {
+		// JFileChooser saveFile = new JFileChooser();
+		// if (saveFile.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+		// File selectedSaveFile = saveFile.getSelectedFile();
+		// fileSave = selectedSaveFile.getPath();
+		// System.out.println(fileSave);
+		// }
+		//
+		// }
+		// });
 
 		// ket thuc File Chooser
+
+		// ///////////////////// Ket thuc //////////////////////
+
 		pnTextSend.add(txtSend);
 		btnSend = new JButton("Send");
 		btnSend.setVisible(false);
@@ -166,7 +163,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		JPanel pnEast = new JPanel();
 		pnEast.setLayout(new BorderLayout());
 		// JPanel for Login
-		JPanel pnLogin = new JPanel(new GridLayout(4, 2, 1, 1));
+		JPanel pnLogin = new JPanel(new GridLayout(5, 2, 1, 1));
 		pnLogin.add(new JLabel("Server:"));
 		txthost = new JTextField("localhost", 10);
 		txthost.addActionListener(this);
@@ -186,6 +183,25 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		btnExit = new JButton("Thoát");
 		btnExit.addActionListener(this);
 		pnLogin.add(btnExit);
+		btnTuyChon = new JButton("Thông tin");
+		btnTuyChon.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new Database().start();
+			}
+		});
+		pnLogin.add(btnTuyChon);
+		btnGuiFile = new JButton("Gửi file");
+		pnLogin.add(btnGuiFile);
+		btnGuiFile.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 		pnLogin.setBorder(BorderFactory.createTitledBorder("Login"));
 
 		// JPanel for List use
@@ -329,11 +345,31 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 	}
 
 	class StartClient extends Thread {
-
 		@Override
 		public void run() {
 			client.start();
 		}
 	}
 
+	class Database extends Thread {
+
+		@Override
+		public void run() {
+			int i = client.connectDatabase();
+			if (i == 1)
+				JOptionPane.showMessageDialog(null, "Kết nối thành công CSDL",
+						"Thông báo", JOptionPane.INFORMATION_MESSAGE);
+			else
+				JOptionPane.showMessageDialog(null,
+						"Kiểm tra lại kết nối CSDL", "Thông báo",
+						JOptionPane.INFORMATION_MESSAGE);
+
+			try {
+				client.showTableData();
+			} catch (SQLException e) {
+				System.out.println(e);
+			}
+		}
+
+	}
 }
