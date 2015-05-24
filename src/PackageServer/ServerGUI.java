@@ -2,6 +2,8 @@ package PackageServer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +16,7 @@ import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,27 +32,29 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	private static final long serialVersionUID = 1L;
 	private JTextField txtPort;
 	private JButton btnStart, btnStop, btnExit, btnClear;
-	private JTextArea txtChat, txtEvent;
+	private JTextArea txtEvent;
 	private Server server;
 	private int port;
 	public Hashtable<String, Server> listUser;
 
+	// Hàm khởi tạo mặc định
 	public ServerGUI(String title) {
 		setTitle(title);
 		this.server = null;
 		this.port = 0;
 	}
 
+	// Hàm thực thực hiện Frame
 	public void doShow() {
-		setSize(400, 300);
+		setSize(380, 300);
 		setLocationRelativeTo(null);
 		addControl();
 		setResizable(true);
 		setVisible(true);
 	}
 
+	// Thêm các thành phần giao diện
 	private void addControl() {
-		// UI
 		JPanel pnBorder = new JPanel();
 		pnBorder.setLayout(new BorderLayout());
 		JPanel pnNort = new JPanel();
@@ -66,7 +71,6 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		pnNort.add(btnStop);
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(this);
-
 		pnNort.add(btnExit);
 		btnClear = new JButton("Clear");
 		btnClear.addActionListener(this);
@@ -74,12 +78,23 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		// Include Area Event
 		JPanel pnCenter = new JPanel();
 		pnCenter.setLayout(new BorderLayout());
-		// pnCenter.setLayout(new GridLayout(1, 2));
-		// txtChat = new JTextArea(10, 10);
-		// txtChat.setEditable(false);
-		// appendRoom("Chat room.");
-		// pnCenter.add(new JScrollPane(txtChat));
-		txtEvent = new JTextArea(10, 10);
+
+		// Thêm ảnh cho phần thêm sự kiện trong server
+		ImageIcon icon = new ImageIcon("background\\background_4.jpg");
+		txtEvent = new JTextArea(10, 10) {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public void paintComponent(Graphics g) {
+				Dimension d = getSize();
+				g.drawImage(icon.getImage(), 0, 0, d.width, d.height, null);
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+		};
 		txtEvent.setEditable(false);
 		appendEvent("Log event.");
 		pnCenter.add(new JScrollPane(txtEvent));
@@ -95,6 +110,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		txtEvent.append(str + "\n");
 	}
 
+	// Hàm thực hiện chính
 	public static void main(String[] args) {
 		ServerGUI servGUI = new ServerGUI("Server");
 		servGUI.doShow();

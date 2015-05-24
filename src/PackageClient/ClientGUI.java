@@ -13,8 +13,6 @@ import java.io.PrintWriter;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-
-
 public class ClientGUI extends JFrame implements ActionListener, WindowListener {
 
 	/**
@@ -22,16 +20,15 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 	 */
 	private static final long serialVersionUID = 1L;
 	// Varible for GUI
-	
 
 	protected JTextArea txtMessage, txtListUser;
 	protected JTextField txthost, txtUser, txtSend, txtPort;
-	protected JButton btnConnect, btnExit, btnLogin, btnSend, sendFileBtn, openBtn,saveBtn;
-	ImageIcon icon;
+	protected JButton btnConnect, btnExit, btnLogin, btnSend, sendFileBtn,
+			openBtn, saveBtn;
 	protected String filePath, fileSave;
 	// Varible use;
 	private Client client;
-	
+
 	public String getFileSave() {
 		return fileSave;
 	}
@@ -39,6 +36,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 	public String getFilePath() {
 		return filePath;
 	}
+
 	public ClientGUI(String title) {
 		setTitle(title);
 		setSize(600, 400);
@@ -57,7 +55,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		pnCenter.setLayout(new BorderLayout());
 		JPanel pnMessage = new JPanel(new BorderLayout());
 
-		icon = new ImageIcon("background\\btn.jpg");
+		ImageIcon icon = new ImageIcon("background\\background_1.jpg");
 		txtMessage = new JTextArea(10, 10) {
 			/**
 			 * 
@@ -218,7 +216,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
 	public static void main(String[] args) {
 		ClientGUI clientGui = new ClientGUI("Client");
-		
+
 	}
 
 	public void appendMessage(String str) {
@@ -232,7 +230,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		txtListUser.append(str);
 		txtListUser.append("\n");
 	}
-	
+
 	public String getMessage() {
 		String txt = txtSend.getText();
 		txtSend.setText(" ");
@@ -268,7 +266,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 			}
 		}
 		if (e.getSource() == btnLogin) {
-			
+
 			if (btnLogin.getText() == "Đăng nhập") {
 				btnLogin.setText("Đăng xuất");
 				String host = getHost();
@@ -289,7 +287,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 				client = null;
 
 			}
-			//client.checkLogin(getName());
+			// client.checkLogin(getName());
 		}
 
 	}
@@ -347,4 +345,3 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		}
 	}
 }
-
