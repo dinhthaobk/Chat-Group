@@ -10,7 +10,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+import javafx.scene.shape.Line;
+
 import javax.swing.JOptionPane;
+
+import com.sun.org.apache.bcel.internal.generic.GOTO;
 
 class Server {
 
@@ -155,7 +159,7 @@ class Server {
 							break;
 						} else {
 							out.println("CANCELNAME");
-							break;
+							return;
 						}
 					}
 				}
@@ -170,12 +174,14 @@ class Server {
 				out.println("NAMEACCEPTED");
 
 				writers.add(out);
+				// System.out.println(writers.size());
 				for (PrintWriter writer : writers) {
 					writer.println("LIST_ONLINE" + listUser);
 				}
 				for (String name : names) {
-					listUser += name.toString() + "\n";
+					listUser += name.toString() + ",";
 				}
+
 				// Thực hiện quá trình gửi lại cho các client
 				while (true) {
 					// send file
@@ -207,21 +213,42 @@ class Server {
 					// bos.close();
 					// is.close();
 					// // ket thuc send file
-					
+
 					String input = in.readLine();
 					if (input == null) {
 						return;
 					}
+					if (input.startsWith("EXIT")) {
+						servGUI.appendEvent(name + " đã thoát khỏi phòng !");
+						System.out.println(name + " đã thoát khỏi phòng !");
+						names.remove(name);
+						// //
+						listUser = "";
+						for (String object : names)
+							listUser += "," + object;
+						for (PrintWriter writer : writers) {
+							writer.println("LIST_ONLINE" + listUser);
+						}
 
+						try {
+							// Xóa người dùng khỏi CSDL
+							deleteUser(stmt, name);
+						} catch (SQLException e) {
+							System.out.println(e.getMessage());
+						}
+					}
+					// System.out.println("Read in :" + input);
+					// System.out.println(writers.size());
 					for (PrintWriter writer : writers) {
+						// System.out.println(" - - - ");
 						writer.println("MESSAGE" + name + "  :" + input);
-						System.out.println(name + ": " + input);
+						// System.out.println(name + " here " + ": " + input);
 					}
 
 				}
 
 			} catch (Exception ex) {
-				servGUI.appendEvent(name + " đã thoát !");
+				servGUI.appendEvent(name + " đã thoát khỏi phòng !");
 				names.remove(name);
 				// //
 				listUser = "";

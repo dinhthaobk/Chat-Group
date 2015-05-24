@@ -17,8 +17,6 @@ class Client {
 	private int port;
 	Socket socket;
 
-	private boolean isConnectServer = false;
-
 	Connection conn = null;
 	Statement stmt = null;
 
@@ -78,7 +76,6 @@ class Client {
 	public void start() {
 		try {
 			socket = new Socket(host, port);
-			isConnectServer = true;
 			in = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(), true);
@@ -93,7 +90,7 @@ class Client {
 					JOptionPane.showMessageDialog(null,
 							"Tên đăng nhập đã trùng !", "Chú ý! ",
 							JOptionPane.WARNING_MESSAGE);
-					return;
+					System.exit(1);
 				}
 				if (line.startsWith("NAMEACCEPTED")) {
 					// System.out.println(line);
@@ -102,10 +99,19 @@ class Client {
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 
+				if (line.startsWith("LIST_ONLINE")) {
+					String lineList = line.substring(12).replace(',', '\n');
+					clientGui.appendListOnline(lineList);
+					System.out.println(line);
+
+				}
 				if (line.startsWith("MESSAGE")) {
+					// String messge = line.substring(7);
+					// if (!messge.equals("EXIT")) {
+					// clientGui.appendMessage(messge);
+					// }
 					clientGui.appendMessage(line.substring(7));
 				}
-
 				if (line.startsWith("LIST_ONLINE")) {
 					String lineList = line.substring(12).replace(',', '\n');
 					clientGui.appendListOnline(lineList);
@@ -124,14 +130,6 @@ class Client {
 
 	}
 
-	public boolean isConnectServer() {
-		return isConnectServer;
-	}
-
-	public void setConnectServer(boolean isConnectServer) {
-		this.isConnectServer = isConnectServer;
-	}
-
 	public void sendMessage() {
 		send();
 		System.out.println("Send message" + clientGui.getMessage());
@@ -140,7 +138,10 @@ class Client {
 
 	public void stop() {
 		try {
+			out.println("EXIT");
 			socket.close();
+			in.close();
+			out.close();
 			socket = null;
 			name = null;
 			host = null;

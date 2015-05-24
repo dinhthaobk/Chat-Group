@@ -31,7 +31,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
 	public ClientGUI(String title) {
 		setTitle(title);
-		setSize(700, 400);
+		setSize(589, 456);
 		addComponent();
 		setResizable(true);
 		setLocationRelativeTo(null);
@@ -172,13 +172,10 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		txthost.addActionListener(this);
 		pnLogin.add(txthost);
 
-		pnLogin.add(new JLabel("User name:"));
-		txtUser = new JTextField(" ", 10);
-
 		pnLogin.add(new JLabel("Cổng:"));
 		txtPort = new JTextField("3333", 5);
 		pnLogin.add(txtPort);
-		pnLogin.add(new JLabel("Tài khoản:"));
+		pnLogin.add(new JLabel("Tên hiển thị:"));
 		txtUser = new JTextField("Thao Phan", 10);
 
 		txtUser.addActionListener(this);
@@ -335,10 +332,8 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
 		@Override
 		public void run() {
-			if (btnLogin.getText() == "Đăng xuất")
-				client.start();
-			else
-				client.stop();
+			client.start();
 		}
 	}
+
 }
