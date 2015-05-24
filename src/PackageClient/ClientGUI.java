@@ -192,16 +192,16 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 			}
 		});
 		pnLogin.add(btnTuyChon);
-		btnGuiFile = new JButton("Gửi file");
-		pnLogin.add(btnGuiFile);
-		btnGuiFile.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-		});
+//		btnGuiFile = new JButton("Gửi file");
+//		pnLogin.add(btnGuiFile);
+//		btnGuiFile.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//		});
 		pnLogin.setBorder(BorderFactory.createTitledBorder("Login"));
 
 		// JPanel for List use
