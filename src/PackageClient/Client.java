@@ -17,6 +17,8 @@ class Client {
 	private int port;
 	Socket socket;
 
+	private boolean isConnectServer = false;
+
 	Connection conn = null;
 	Statement stmt = null;
 
@@ -76,6 +78,7 @@ class Client {
 	public void start() {
 		try {
 			socket = new Socket(host, port);
+			isConnectServer = true;
 			in = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(), true);
@@ -119,6 +122,14 @@ class Client {
 					JOptionPane.WARNING_MESSAGE);
 		}
 
+	}
+
+	public boolean isConnectServer() {
+		return isConnectServer;
+	}
+
+	public void setConnectServer(boolean isConnectServer) {
+		this.isConnectServer = isConnectServer;
 	}
 
 	public void sendMessage() {

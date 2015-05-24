@@ -31,7 +31,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 
 	public ClientGUI(String title) {
 		setTitle(title);
-		setSize(600, 400);
+		setSize(700, 400);
 		addComponent();
 		setResizable(true);
 		setLocationRelativeTo(null);
@@ -61,27 +61,32 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 				super.paintComponent(g);
 			}
 		};
-		// icon = new ImageIcon("src\\PackageClient\\bg.jpg");
 
 		txtMessage.setEditable(false);
 		pnMessage.add(new JScrollPane(txtMessage));
 		pnMessage.setBorder(BorderFactory.createTitledBorder("Message Chat"));
 		pnCenter.add(pnMessage, BorderLayout.CENTER);
 		JPanel pnTextSend = new JPanel(new FlowLayout());
-		txtSend = new JTextField(25);
+		txtSend = new JTextField(30);
 		// txtSend.setLineWrap(isResizable()); // Xuong dong khi het dong
 		txtSend.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				client.send();
-				// ////////////////////////////////////////
-
-				if (e.getSource() == btnLogin) {
-					client.checkLogin(txtUser.getName());
-					txtListUser.setText(txtUser.getName());
-
+				try {
+					client.send();
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null,
+							"Không thể gửi tin nhắn !\n Kiểm tra lại ",
+							"Cảnh báo", JOptionPane.ERROR_MESSAGE);
 				}
+				// ////////////////////////////////////////
+				//
+				// if (e.getSource() == btnLogin) {
+				// client.checkLogin(txtUser.getName());
+				// txtListUser.setText(txtUser.getName());
+				//
+				// }
 
 			}
 		});
@@ -161,7 +166,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 		JPanel pnEast = new JPanel();
 		pnEast.setLayout(new BorderLayout());
 		// JPanel for Login
-		JPanel pnLogin = new JPanel(new GridLayout(4, 1, 1, 1));
+		JPanel pnLogin = new JPanel(new GridLayout(4, 2, 1, 1));
 		pnLogin.add(new JLabel("Server:"));
 		txthost = new JTextField("localhost", 10);
 		txthost.addActionListener(this);
