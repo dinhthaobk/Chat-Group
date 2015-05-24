@@ -1,17 +1,9 @@
 package PackageClient;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-
+import java.awt.event.*;
+import java.io.*;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 public class ClientGUI extends JFrame implements ActionListener, WindowListener {
 
@@ -83,70 +75,70 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				client.send();
-				//////////////////////////////////////////
-				
-				if(e.getSource()==btnLogin){
+				// ////////////////////////////////////////
+
+				if (e.getSource() == btnLogin) {
 					client.checkLogin(txtUser.getName());
 					txtListUser.setText(txtUser.getName());
-					
+
 				}
-				
+
 			}
 		});
 		// File chooser GUI
-				JPanel pnFile= new JPanel();
-				 saveBtn = new JButton("Save");
-		         sendFileBtn = new JButton("Send");
-		         openBtn = new JButton("Open");
-		         pnFile.add(sendFileBtn, BorderLayout.WEST);
-		         pnFile.add(openBtn, BorderLayout.EAST);
-		         pnFile.add(saveBtn,BorderLayout.CENTER);
-		         pnBorder.add(pnFile, BorderLayout.SOUTH);
-		         pnFile.setVisible(true);
-		         //send file button
-		        sendFileBtn.addActionListener(new ActionListener() {
+		JPanel pnFile = new JPanel();
+		saveBtn = new JButton("Save");
+		sendFileBtn = new JButton("Send");
+		openBtn = new JButton("Open");
+		pnFile.add(sendFileBtn, BorderLayout.WEST);
+		pnFile.add(openBtn, BorderLayout.EAST);
+		pnFile.add(saveBtn, BorderLayout.CENTER);
+		pnBorder.add(pnFile, BorderLayout.SOUTH);
+		pnFile.setVisible(true);
+		// send file button
+		sendFileBtn.addActionListener(new ActionListener() {
 
-		            @Override
-		            public void actionPerformed(ActionEvent arg0) {
-		                try {
-							client.sendFile();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-		            }
-		        });
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					client.sendFile();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 
-		        openBtn.addActionListener(new ActionListener() {
+		openBtn.addActionListener(new ActionListener() {
 
-		            @Override
-		            public void actionPerformed(ActionEvent arg0) {
-		                JFileChooser openFile = new JFileChooser();
-		                
-		                //JFileChooser fileOpen = new JFileChooser();
-		                if(openFile.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
-		                	File selectedFile = openFile.getSelectedFile();
-		                	filePath = selectedFile.getPath();
-		                	System.out.println(filePath);
-		                }
-		                
-		            }
-		        });
-		        saveBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser openFile = new JFileChooser();
 
-		            @Override
-		            public void actionPerformed(ActionEvent arg0) {
-		                JFileChooser saveFile = new JFileChooser();
-		                if(saveFile.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
-		                	File selectedSaveFile = saveFile.getSelectedFile();
-		                	fileSave = selectedSaveFile.getPath();
-		                	System.out.println(fileSave);
-		                }
-		                
-		            }
-		        });
-		        
-		        //ket thuc File Chooser
+				// JFileChooser fileOpen = new JFileChooser();
+				if (openFile.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = openFile.getSelectedFile();
+					filePath = selectedFile.getPath();
+					System.out.println(filePath);
+				}
+
+			}
+		});
+		saveBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser saveFile = new JFileChooser();
+				if (saveFile.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					File selectedSaveFile = saveFile.getSelectedFile();
+					fileSave = selectedSaveFile.getPath();
+					System.out.println(fileSave);
+				}
+
+			}
+		});
+
+		// ket thuc File Chooser
 
 		// ket thuc File Chooser
 		pnTextSend.add(txtSend);
